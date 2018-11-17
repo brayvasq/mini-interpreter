@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'interpreter'
+    'interpreter',
+    'rest_framework' # enable rest framework
 ]
 
 MIDDLEWARE = [
@@ -74,12 +75,37 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}'''
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'mysql.connector.django',
+        'HOST': 'localhost',
+        'NAME': 'interpreterdb',
+        'USER': 'root',
+        'PASSWORD': '',
+        'OPTIONS': {
+          'autocommit': True,
+        },
+    }
 }
+
+
+'''DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'interpreterdb',
+        'USER': 'root',
+        'HOST': 'localhost',
+        'PASSWORD': ''
+    }
+}'''
 
 
 # Password validation
