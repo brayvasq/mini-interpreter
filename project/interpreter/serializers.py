@@ -4,4 +4,5 @@ from .models import Sentence
 class SentenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sentence
-        fields = '__all__'
+        fields = ("id","input_code", "output_code")
+        #fields = '__all__'

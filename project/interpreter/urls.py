@@ -2,5 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('api/sentence',views.SentenceListCreate.as_view()),
+    path('sentences',views.SentenceListCreate.as_view(),name="sentences-all"),
+    path('sentences/<int:pk>/', views.SentenceDetailView.as_view(), name="songs-detail"),
 ]

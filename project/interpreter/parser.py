@@ -10,7 +10,7 @@ class Parser:
 
     def p_quote_assign(self,p):
         "quote : assign"
-        p[1]
+        p[0] = p[1]
 
     def p_quote_expr(self,p):
         "quote : expr"
@@ -18,36 +18,41 @@ class Parser:
 
     def p_assign(self,p):
         "assign : ID EQUALS expr"
-        print("Assigning variable", p[1], "to", p[3])
+        #print("Assigning variable", p[1], "to", p[3])
         self.variables[p[1]] = p[3]
+        p[0] = "Assigning variable "+str(p[1])+" To : "+str(p[3])
 
     def p_expr_sum(self,p):
         "expr : expr PLUS term"
         try:
             p[0] = p[1] + p[3]
         except:
-            print("Tipos de datos incompatibles")
+            #print("Tipos de datos incompatibles")
+            p[0] = "Tipos de datos incompatibles"
 
     def p_expr_min(self,p):
         "expr : expr MINUS term"
         try:
             p[0] = p[1] - p[3]
         except:
-            print("Tipos de datos incompatibles")
+            #print("Tipos de datos incompatibles")
+            p[0] = "Tipos de datos incompatibles"
 
     def p_expr_div(self,p):
         "expr : expr DIVIDE term"
         try:
             p[0] = p[1] / p[3]
         except:
-            print("Tipos de datos incompatibles")
+            #print("Tipos de datos incompatibles")
+            p[0] = "Tipos de datos incompatibles"
 
     def p_expr_time(self,p):
         "expr : expr TIMES term"
         try:
             p[0] = p[1] * p[3]
         except:
-            print("Tipos de datos incompatibles")
+            #print("Tipos de datos incompatibles")
+            p[0] = "Tipos de datos incompatibles"
 
     def p_expr_term(self,p):
         "expr : term"
@@ -60,6 +65,7 @@ class Parser:
     def p_command(self,p):
         "term : SHOW"
         print(self.variables)
+        p[0] = self.variables
 
     def p_term_id(self,p):
         "term : ID"
@@ -71,7 +77,8 @@ class Parser:
 
 
     def p_error(self,p):
-        print("Syntax error in input!")
+        #print("Syntax error in input!")
+        p[0] = "Syntax error in input!"
 
     def evaluate(self,s):
         par = yacc.yacc(module=self)
