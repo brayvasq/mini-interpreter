@@ -29,6 +29,28 @@ class UserList(generics.ListAPIView):
         else:
             return Response("Access denied!")
 
+class UserDelete(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            if request.user.is_reviewer:
+                user = self.queryset.get(pk=kwargs["pk"])
+                user.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response("Access denied!")
+        except User.DoesNotExist:
+            return Response(
+                data={
+                    "message": "User with id: {} does not exist".format(kwargs["pk"])
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
 class SentenceListCreate(generics.ListCreateAPIView):
     """
         Esta vista genérica provee por defecto los
@@ -45,18 +67,21 @@ class SentenceListCreate(generics.ListCreateAPIView):
 
     @validate_request_data
     def post(self, request, *args, **kwargs):
-        input_code = request.data["input_code"]
-        result = self.parser.evaluate(input_code)
+        if request.user.is_coder:
+            input_code = request.data["input_code"]
+            result = self.parser.evaluate(input_code)
 
-        sentence = Sentence.objects.create(
-            input_code=input_code,
-            output_code=result
-        )
+            sentence = Sentence.objects.create(
+                input_code=input_code,
+                output_code=result
+            )
 
-        return Response(
-            data=SentenceSerializer(sentence).data,
-            status=status.HTTP_201_CREATED
-        )
+            return Response(
+                data=SentenceSerializer(sentence).data,
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response("Access denied!")
 
 
 class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -71,8 +96,11 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            sentence = self.queryset.get(pk=kwargs["pk"])
-            return Response(SentenceSerializer(sentence).data)
+            if request.user.is_coder:
+                sentence = self.queryset.get(pk=kwargs["pk"])
+                return Response(SentenceSerializer(sentence).data)
+            else:
+                return Response("Access Denied!")
         except Sentence.DoesNotExist:
             return Response(
                 data={
@@ -84,10 +112,13 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
     @validate_request_data
     def put(self, request, *args, **kwargs):
         try:
-            sentence = self.queryset.get(pk=kwargs["pk"])
-            serializer = SentenceSerializer()
-            updated_song = serializer.update(sentence, request.data)
-            return Response(SentenceSerializer(updated_song).data)
+            if request.user.is_coder:
+                sentence = self.queryset.get(pk=kwargs["pk"])
+                serializer = SentenceSerializer()
+                updated_song = serializer.update(sentence, request.data)
+                return Response(SentenceSerializer(updated_song).data)
+            else:
+                return Response("Access Denied!")
         except Sentence.DoesNotExist:
             return Response(
                 data={
@@ -98,9 +129,12 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         try:
-            sentence = self.queryset.get(pk=kwargs["pk"])
-            sentence.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            if request.user.is_coder:
+                sentence = self.queryset.get(pk=kwargs["pk"])
+                sentence.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response("Access Denied!")
         except Sentence.DoesNotExist:
             return Response(
                 data={
@@ -149,9 +183,10 @@ class RegisterUsers(generics.CreateAPIView):
         username = request.data.get("username", "")
         password = request.data.get("password", "")
         email = request.data.get("email", "")
-        is_coder = True if request.data.get("is_coder","") == 'true' else False
-        is_reviewer = True if request.data.get("is_reviewer","") == 'true' else False
-
+        #is_coder = True if request.data.get("is_coder","") == 'true' else False
+        #is_reviewer = True if request.data.get("is_reviewer","") == 'true' else False
+        is_coder = True
+        is_reviewer = False
         if not username and not password and not email:
             return Response(
                 data={
