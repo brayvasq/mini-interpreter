@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from .models import Sentence
 
 class SentenceSerializer(serializers.ModelSerializer):
@@ -17,4 +19,4 @@ class TokenSerializaer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email")
+        fields = ("username", "email","password","is_coder","is_reviewer")

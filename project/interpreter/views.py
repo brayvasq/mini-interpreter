@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from .models import Sentence
 from .serializers import SentenceSerializer, TokenSerializaer, UserSerializer
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+#from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login,get_user_model
 from rest_framework_jwt.settings import api_settings
 from rest_framework import permissions
 from rest_framework import generics
@@ -12,11 +12,22 @@ from .parser import Parser
 from .decorators import validate_request_data
 
 # Create your views here.
-
+User = get_user_model()
 # Creando la configuración de JWT
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
+        if request.user.is_reviewer:
+            user = self.queryset.all()
+            return Response(UserSerializer(user,many=True).data)
+        else:
+            return Response("Access denied!")
 
 class SentenceListCreate(generics.ListCreateAPIView):
     """
@@ -25,6 +36,7 @@ class SentenceListCreate(generics.ListCreateAPIView):
     """
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
+    permission_classes = (permissions.IsAuthenticated,)
     parser = Parser()
 
     '''def list(self,request):
@@ -137,6 +149,9 @@ class RegisterUsers(generics.CreateAPIView):
         username = request.data.get("username", "")
         password = request.data.get("password", "")
         email = request.data.get("email", "")
+        is_coder = True if request.data.get("is_coder","") == 'true' else False
+        is_reviewer = True if request.data.get("is_reviewer","") == 'true' else False
+
         if not username and not password and not email:
             return Response(
                 data={
@@ -145,6 +160,6 @@ class RegisterUsers(generics.CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         new_user = User.objects.create_user(
-            username=username, password=password, email=email
+            username=username, password=password, email=email,is_coder=is_coder,is_reviewer=is_reviewer
         )
         return Response(status=status.HTTP_201_CREATED)

@@ -1,12 +1,15 @@
 from django.test import TestCase
 import json
 from django.urls import reverse
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from rest_framework.test import APITestCase,APIClient
 from rest_framework.views import status
 from .models import Sentence
 from .serializers import SentenceSerializer
 from .parser import Parser
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 # Create your tests here.
 
 class BaseViewTest(APITestCase):
