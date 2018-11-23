@@ -1,0 +1,33 @@
+{
+  "name": "mini-interpreter",
+  "version": "1.0.0",
+  "description": "Creando el directorio.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development ./project/frontend/src/index.js --output ./project/frontend/static/frontend/main.js",
+    "build": "webpack --mode production ./project/frontend/src/index.js --output ./project/frontend/static/frontend/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brayvasq/mini-interpreter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brayvasq/mini-interpreter/issues"
+  },
+  "homepage": "https://github.com/brayvasq/mini-interpreter#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2"
+  }
+}

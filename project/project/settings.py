@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'interpreter',
-    'rest_framework' # enable rest framework
+    'rest_framework', # enable rest framework
+    'frontend' # enable the frontend app
 ]
 
 AUTH_USER_MODEL = 'interpreter.User'
