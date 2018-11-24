@@ -29,6 +29,23 @@ class UserList(generics.ListAPIView):
         else:
             return Response("Access denied!")
 
+class UserCheck(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permissions = (permissions.IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
+        if request.user.is_reviewer:
+            return Response(data={
+                "coder": False
+            })
+        elif request.user.is_coder:
+            return Response(data={
+                "coder": True
+            })
+        else:
+            return Response("Access denied!")
+
 class UserDelete(generics.DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -168,9 +185,12 @@ class LoginView(generics.CreateAPIView):
                 )
             })
             serializer.is_valid()
-            return Response(serializer.data)
+            #return Response(serializer.data)
+            return Response(data={
+                "token": serializer.data["token"],
+                "is_coder": user.is_coder
+            })
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 
 class RegisterUsers(generics.CreateAPIView):
     """

@@ -1,35 +1,97 @@
 import React, {Component} from 'react';
 import './App.css';
-
+import axios from 'axios';
 
 class App extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            username: '',
+            password: ''
+        }
+        this.register = this.register.bind(this);
+        this.login = this.login.bind(this);
+        this.handleChangeUser = this.handleChangeUser.bind(this);
+        this.handleChangePass = this.handleChangePass.bind(this);
+    }
+
+    handleChangeUser(event) {
+        this.setState({username: event.target.value})
+    }
+
+    handleChangePass(event) {
+        this.setState({password: event.target.value})
+    }
+
+    login(){
+        const dataUser = {
+            username: this.state.username,
+            password: this.state.password
+        }
+        axios.post('http://localhost:8000/api/auth/login/',dataUser).then(resp =>{
+            console.log(resp)
+            if(resp.data.token){
+                localStorage.setItem("token",resp.data.token);
+                if(resp.data.is_coder){
+                    this.props.history.push("/code");
+                }else{
+                    this.props.history.push("/users");
+                }
+            }
+
+        });
+    }
+
+    register() {
+        const dataUser = {
+            username: this.state.username,
+            password: this.state.password,
+            email: this.state.username + "@mail.com",
+            is_coder: true,
+            is_reviewer: false
+        }
+        axios.post('http://localhost:8000/api/auth/register/',dataUser).then(resp =>{
+            console.log(resp)
+        });
+
+        /*const resp = await axios({
+            method: 'post', //you can set what request you want to be
+            url: 'https://example.com/request',
+            data: dataUser,
+            headers: {
+                Authorization: 'Bearer ' + varToken
+            }
+        })*/
+    }
+
     render() {
         return (
             <div className="login">
 
                 <div className="container has-text-centered">
                     <div className="column is-4 is-offset-4">
-                        <div className="center">
+                        <div className="box center">
+                            <h1 className="title is-1"> Interpreter </h1>
+                            <form>
+                                <div className="field">
+                                    <label className="label">UserName</label>
+                                    <div className="control">
+                                        <input className="input" type="text" placeholder="Text input" value={this.state.username} onChange={this.handleChangeUser}/>
+                                    </div>
+                                </div>
+                                <div className="field">
+                                    <label className="label">Password</label>
+                                    <div className="control">
+                                        <input className="input" type="password" placeholder="Text input" value={this.state.password} onChange={this.handleChangePass}/>
+                                    </div>
+                                </div>
 
-                            <div className="box">
-                                <h1 className="title is-1"> Hello </h1>
-                                <form>
-                                    <div className="field">
-                                        <div className="control">
-                                            <input className="input" type="email" placeholder="Your Email"
-                                                   autoFocus=""/>
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <div className="control">
-                                            <input className="input" type="email" placeholder="Your Email"
-                                                   autoFocus=""/>
-                                        </div>
-                                    </div>
-                                    <button className="button is-primary"> Sign In</button>
-                                    <button className="button is-primary">Sign Up</button>
-                                </form>
-                            </div>
+                                <div className="buttons">
+                                    <span className="button is-success" onClick={this.login}>Sing In</span>
+                                    <span className="button is-info" onClick={this.register}>Sign Up</span>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
