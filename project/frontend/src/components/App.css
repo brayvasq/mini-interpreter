@@ -1,0 +1,12 @@
+.login{
+    height: -webkit-fill-available;
+    width: 100%;
+    background-image: linear-gradient(to bottom left, mediumseagreen,dodgerblue);
+    overflow: visible;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}

@@ -399,7 +399,11 @@ En muchos casos este driver saca error con nuevas versiones de django, para solu
 - descargar el archivo `base.py` de https://github.com/mysql/mysql-connector-python/blob/master/lib/mysql/connector/django/base.py
 - pegar y reemplazar el archivo `base.py` descargado en `virtual_env_project\Lib\site-packages\mysql\connector\django`
 
-
+### React App
+Compilar react app
+```bash
+npm run dev
+```
 
 ### Referencias
 
