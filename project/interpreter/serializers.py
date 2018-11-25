@@ -19,4 +19,4 @@ class TokenSerializaer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email","password","is_coder","is_reviewer")
+        fields = ("id","username", "email","password","is_coder","is_reviewer")
