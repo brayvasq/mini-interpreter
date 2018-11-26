@@ -20,7 +20,7 @@ class Parser:
         "assign : ID EQUALS expr"
         #print("Assigning variable", p[1], "to", p[3])
         self.variables[p[1]] = p[3]
-        p[0] = "Assigning variable "+str(p[1])+" To : "+str(p[3])
+        p[0] = "Assigning "+str(p[3])+" To Variable : "+str(p[1])
 
     def p_expr_sum(self,p):
         "expr : expr PLUS term"

@@ -14,7 +14,6 @@ class ListUsers extends React.Component {
         };
 
         this.getUsers = this.getUsers.bind(this);
-        this.createdTasks = this.createdTasks.bind(this);
     }
 
     componentDidMount() {
@@ -22,7 +21,7 @@ class ListUsers extends React.Component {
         //this.getUsers()
     }
 
-    createdTasks(item) {
+    createdUsers(item) {
         return <User key={item.id} id={item.id} username={item.username} email={item.email}/>
     }
 
@@ -40,10 +39,10 @@ class ListUsers extends React.Component {
     }
 
     render() {
-        const listItems = this.state.list.map(this.createdTasks)
+        const listItems = this.state.list.map(this.createdUsers)
         return (
             <div>
-                <NavBar/>
+                <NavBar create={false}/>
                 <section className="section">
                     <div className="container">
                         <h1 className="title">User List</h1>

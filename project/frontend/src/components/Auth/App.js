@@ -54,15 +54,6 @@ class App extends Component {
         axios.post('http://localhost:8000/api/auth/register/',dataUser).then(resp =>{
             console.log(resp)
         });
-
-        /*const resp = await axios({
-            method: 'post', //you can set what request you want to be
-            url: 'https://example.com/request',
-            data: dataUser,
-            headers: {
-                Authorization: 'Bearer ' + varToken
-            }
-        })*/
     }
 
     render() {

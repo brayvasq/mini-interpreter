@@ -17,6 +17,8 @@ User = get_user_model()
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
+parser = Parser()
+
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -76,7 +78,6 @@ class SentenceListCreate(generics.ListCreateAPIView):
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    parser = Parser()
 
     '''def list(self,request):
         result = self.parser.evaluate('3+3')
@@ -86,7 +87,8 @@ class SentenceListCreate(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.user.is_coder:
             input_code = request.data["input_code"]
-            result = self.parser.evaluate(input_code)
+            global parser
+            result = parser.evaluate(input_code)
 
             sentence = Sentence.objects.create(
                 input_code=input_code,
@@ -130,9 +132,14 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, *args, **kwargs):
         try:
             if request.user.is_coder:
+                print("Es coder")
                 sentence = self.queryset.get(pk=kwargs["pk"])
                 serializer = SentenceSerializer()
-                updated_song = serializer.update(sentence, request.data)
+                data = {}
+                data["input_code"] = request.data["input_code"]
+                global parser
+                data["output_code"] = parser.evaluate(data["input_code"])
+                updated_song = serializer.update(sentence, data)
                 return Response(SentenceSerializer(updated_song).data)
             else:
                 return Response("Access Denied!")
