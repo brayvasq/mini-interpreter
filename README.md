@@ -406,10 +406,10 @@ npm run dev
 ```
 
 ### Preview
-[!login](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/login.PNG)
-[!users](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/preview-user.PNG)
-[!code_1](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/code-prev.PNG)
-[!code_2](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/code-prev-1.PNG)
+![login](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/login.PNG)
+![users](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/preview-user.PNG)
+![code_1](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/code-prev.PNG)
+![code_2](https://github.com/brayvasq/mini-interpreter/blob/master/project/frontend/static/images/code-prev-1.PNG)
 
 ### Referencias
 
