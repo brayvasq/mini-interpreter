@@ -35,6 +35,12 @@ class BaseViewTest(APITestCase):
         )
 
     def login_client(self, username="", password=""):
+        """
+        Método que prueba el login de la app
+        :param username:
+        :param password:
+        :return:
+        """
         # get a token from DRF
         response = self.client.post(
             reverse('create-token'),
@@ -55,6 +61,10 @@ class BaseViewTest(APITestCase):
         return self.token
 
     def setUp(self):
+        """
+        Método que define la información previa, para que las pruebas se ejecuten
+        :return:
+        """
         # Creando un usuario admin
         self.user = User.objects.create_superuser(
             username="test_user",

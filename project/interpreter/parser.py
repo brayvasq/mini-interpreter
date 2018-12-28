@@ -2,12 +2,46 @@ import ply.yacc as yacc
 from .lexer import Lexer
 
 class Parser:
+    """
+        contiene todo lo relacionado con el analisis sintactico y semantico
+        de los algoritmos digitados por el usuario
+    """
     def __init__(self):
-        self.lexer = Lexer()
+        """
+            Constructor donde se inicializan la variables necesarias para
+            el análisis de los códigos
+        """
+        self.lexer = Lexer() # Instancia del analizador lexico
         self.lexer.build()
-        self.tokens = self.lexer.tokens
-        self.variables = {}
+        self.tokens = self.lexer.tokens #tokens del analizdor lexico para construir las reglas
+        self.variables = {}  # Diccionario que contiene las variables declaradas
 
+    # -------------------------------------------------------------------------------------------------
+    #   produccion principal de el analizador sintactico - semantico
+    #
+    #   las producciones se definen de la siguiente manera:
+    #       siempre se utilizan metodos para definirla con el prefijo p_ y reciben como parametro un p
+    #       que contiene lo que ha subido el arbol mediante las reglas semanticas
+    #       ejemplo:
+    #               para una sola produccion
+    #               def p_nombreprocuccion(p):
+    #                   'nombreProduccion : produccion'
+    #
+    #               para varias producciones
+    #               def p_nombreproduccion(p):
+    #                   ''' nombreProduccion : produccion1
+    #                                        | produccion2 '''
+    #
+    #               para reglas semanticas
+    #               def p_nombreproduccion(p):
+    #                   #aqui se pone la produccion de las formas ya especificadas
+    #                   'nombreproduccion : token1 token2 prodcuccion1 token3'
+    #                   #reglas semanticas
+    #                   p[0] = p[1] + p[3]
+    #
+    #                   donde p[0] -> nombreproduccion , p[1] -> token1 , p[2] -> lo que devuelve produccion1
+    #
+    # -------------------------------------------------------------------------------------------------
     def p_quote_assign(self,p):
         "quote : assign"
         p[0] = p[1]
@@ -80,7 +114,13 @@ class Parser:
         #print("Syntax error in input!")
         p[0] = "Syntax error in input!"
 
+
     def evaluate(self,s):
+        """
+        Método que ejecuta el análisis de un código
+        :param s: sentencia a analizar
+        :return: respuesta de la operación despues del análisis
+        """
         par = yacc.yacc(module=self)
         result = par.parse(s, tracking=True, lexer= self.lexer.lexer)
         print(result)

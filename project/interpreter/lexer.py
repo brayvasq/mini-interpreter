@@ -1,11 +1,15 @@
 import ply.lex as lex
 
 class Lexer(object):
-
+    """
+        contiene todo lo relacionado con el analisis léxico
+        de los algoritmos digitados por el usuario
+    """
     def __init__(self):
 
         self.lexer = None
 
+        #Lista de tokens simples
         self.tokens = (
             'ID',
             'NUMBER',
@@ -20,6 +24,10 @@ class Lexer(object):
             'SHOW'
         )
 
+    # -------------------------------------------------------------------------------------------------
+    #        las variables que incian con t_ contienen la expresion regular de tokens que nececitan
+    #        exp regular simple, se nombran así : t_nombrevar = r'expresion regular'
+    # -------------------------------------------------------------------------------------------------
     t_PLUS = r'\+'
     t_MINUS = r'-'
     t_TIMES = r'\*'
@@ -29,6 +37,13 @@ class Lexer(object):
     t_EQUALS = r'\='
     t_SHOW = r'\$show'
 
+    # --------------------------------------------------------------------------------------------------------
+    #       los metodos que contienen t_ son para las expresiones regulares de tokens (con exp mas complejas)
+    #       y siempre recibe como parametro un t-> indicador de token
+    #       normalmente se nombran así: def t_nombretoken(t):
+    #                                      r'expresion regular'
+    #
+    # --------------------------------------------------------------------------------------------------------
     def t_NUMBER(self,t):
         r'\d+'
         t.value = int(t.value)
@@ -57,9 +72,15 @@ class Lexer(object):
         t.lexer.skip(1)
 
     def build(self, **kwargs):
+        """
+        Métodoque construye el analizador léxico para ser usado en los posteriores análisis
+        """
         self.lexer = lex.lex(module=self, **kwargs)
 
     def test(self, data):
+        """
+        Método que obtiene los tokens de una sentencia
+        """
         self.lexer.input(data)
         while True:
             tok = self.lexer.token()

@@ -20,11 +20,21 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 parser = Parser()
 
 class UserList(generics.ListAPIView):
+    """
+        Vista generica que provee solo el método GET
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
+        """
+        Devuelve el listado de usuarios en caso de que el rol de usuario sea is_reviewer
+        :return: Lista de usuarios
+        """
         if request.user.is_reviewer:
             user = self.queryset.all()
             return Response(UserSerializer(user,many=True).data)
@@ -32,11 +42,21 @@ class UserList(generics.ListAPIView):
             return Response("Access denied!")
 
 class UserCheck(generics.ListAPIView):
+    """
+        Vista generica que provee solo el método GET
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permissions = (permissions.IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
+        """
+            Método que verifica el rol de un usuario
+            :return: Booleano indicando si es un usuario normal
+        """
         if request.user.is_reviewer:
             return Response(data={
                 "coder": False
@@ -49,11 +69,24 @@ class UserCheck(generics.ListAPIView):
             return Response("Access denied!")
 
 class UserDelete(generics.DestroyAPIView):
+    """
+         Vista generica que provee solo el método DELETE
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def delete(self, request, *args, **kwargs):
+        """
+        Método que elimina un usuario en específico dependiendo del valor indicado en la url
+        :param request:
+        :param args:
+        :param kwargs: contiene los parámetros enviados por url
+        :return: HTTP_204_NO_CONTENT
+        """
         try:
             if request.user.is_reviewer:
                 user = self.queryset.get(pk=kwargs["pk"])
@@ -72,19 +105,25 @@ class UserDelete(generics.DestroyAPIView):
 
 class SentenceListCreate(generics.ListCreateAPIView):
     """
-        Esta vista genérica provee por defecto los
-        métodos GET y POST
+        Esta vista genérica provee por defecto los métodos GET y POST para las sentencias
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
     """
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    '''def list(self,request):
-        result = self.parser.evaluate('3+3')
-        return Response(result)'''
-
     @validate_request_data
     def post(self, request, *args, **kwargs):
+        """
+        Método que ingresa una nueva sentencia a la base de datos
+        @validate_request_data valida los datos de la petición
+        :param request: posee los datos de la petición, entre ellos, la sentencia de entrada
+        :param args:
+        :param kwargs:
+        :return: Devuelve la sentencia con el resultado despues de ser ejecutada
+        """
         if request.user.is_coder:
             input_code = request.data["input_code"]
             global parser
@@ -108,12 +147,23 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
         GET sentence/:id/
         PUT sentence/:id/
         DELETE sentence/:id/
+        Esta vista genérica provee por defecto los métodos GET,PUT,DELETE para operaciones a detalle de las sentencias
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
     """
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        """
+        Método que obtiene una sentencia en específico dependiendo de un id indicado
+        :param request: contiene los datos de la petición
+        :param args:
+        :param kwargs: contiene los parámetros enviados por url
+        :return: Los datos del usuario especificado
+        """
         try:
             if request.user.is_coder:
                 sentence = self.queryset.get(pk=kwargs["pk"])
@@ -130,6 +180,14 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     @validate_request_data
     def put(self, request, *args, **kwargs):
+        """
+        Método que actualiza los datos de una sentencia en específico dependiendo de un id indicado
+        @validate_request_data valida los datos de la petición
+        :param request:  contiene los datos de la petición
+        :param args:
+        :param kwargs: contiene los parámetros enviados por url
+        :return: Los nuevos datos del usuario especificado
+        """
         try:
             if request.user.is_coder:
                 print("Es coder")
@@ -152,6 +210,13 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
             )
 
     def delete(self, request, *args, **kwargs):
+        """
+        Método que elimina una sentencia en específico dependiendo de un id indicado
+        :param request:  contiene los datos de la petición
+        :param args:
+        :param kwargs: contiene los parámetros enviados por url
+        :return: Los nuevos datos del usuario especificado
+        """
         try:
             if request.user.is_coder:
                 sentence = self.queryset.get(pk=kwargs["pk"])
@@ -171,6 +236,9 @@ class SentenceDetailView(generics.RetrieveUpdateDestroyAPIView):
 class LoginView(generics.CreateAPIView):
     """
         View para el método POST auth/login
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -178,6 +246,13 @@ class LoginView(generics.CreateAPIView):
     queryset = User.objects.all()
 
     def post(self, request, *args, **kwargs):
+        """
+        Método que loguea a los usuarios
+        :param request:  contiene los datos de la petición
+        :param args:
+        :param kwargs: contiene los parámetros enviados por url
+        :return: token JWT para enviar en las peticiones que requieren autenticación
+        """
         username = request.data.get("username", "")
         password = request.data.get("password", "")
         user = authenticate(request, username=username, password=password)
@@ -192,7 +267,7 @@ class LoginView(generics.CreateAPIView):
                 )
             })
             serializer.is_valid()
-            #return Response(serializer.data)
+
             return Response(data={
                 "token": serializer.data["token"],
                 "is_coder": user.is_coder
@@ -202,16 +277,25 @@ class LoginView(generics.CreateAPIView):
 class RegisterUsers(generics.CreateAPIView):
     """
         POST auth/register/
+        queryset: objeto del cual se realizarán las consultas
+        serializer_class: Clase que parsea las respuestas y las peticiones al formato que se necesite
+        permission_classes: Permisos necesarios para acceder a la vista
     """
     permission_classes = (permissions.AllowAny,)
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        Método que registra nuevos usuarios en la plataforma
+        :param request:  contiene los datos de la petición
+        :param args:
+        :param kwargs: contiene los parámetros enviados por url
+        :return: HTTP_201_CREATED
+        """
         username = request.data.get("username", "")
         password = request.data.get("password", "")
         email = request.data.get("email", "")
-        #is_coder = True if request.data.get("is_coder","") == 'true' else False
-        #is_reviewer = True if request.data.get("is_reviewer","") == 'true' else False
+
         is_coder = True
         is_reviewer = False
         if not username and not password and not email:

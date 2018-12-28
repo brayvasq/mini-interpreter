@@ -1,6 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.views import status
 
+"""
+    Decorador definido para que valide que algunos campos de la sentencia
+    que llegan en la petición no estén vacíos
+"""
 def validate_request_data(fn):
     def decorated(*args, **kwargs):
         # args[0] == GenericView Object

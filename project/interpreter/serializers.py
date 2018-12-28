@@ -5,6 +5,10 @@ User = get_user_model()
 from .models import Sentence
 
 class SentenceSerializer(serializers.ModelSerializer):
+    """
+        Clase que define los elementos o campos para traducir de las sentencias en los formatos indicados
+        para las peticiones
+    """
     class Meta:
         model = Sentence
         fields = ("id","input_code", "output_code")
@@ -17,6 +21,10 @@ class TokenSerializaer(serializers.Serializer):
     token = serializers.CharField(max_length=255)
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+        Clase que define los elementos o campos para traducir del usuario en los formatos indicados
+        para las peticiones
+    """
     class Meta:
         model = User
         fields = ("id","username", "email","password","is_coder","is_reviewer")

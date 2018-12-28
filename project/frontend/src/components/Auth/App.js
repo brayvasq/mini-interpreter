@@ -68,13 +68,13 @@ class App extends Component {
                                 <div className="field">
                                     <label className="label">UserName</label>
                                     <div className="control">
-                                        <input className="input" type="text" placeholder="Text input" value={this.state.username} onChange={this.handleChangeUser}/>
+                                        <input className="input" type="text" placeholder="Username" value={this.state.username} onChange={this.handleChangeUser}/>
                                     </div>
                                 </div>
                                 <div className="field">
                                     <label className="label">Password</label>
                                     <div className="control">
-                                        <input className="input" type="password" placeholder="Text input" value={this.state.password} onChange={this.handleChangePass}/>
+                                        <input className="input" type="password" placeholder="Password" value={this.state.password} onChange={this.handleChangePass}/>
                                     </div>
                                 </div>
 
